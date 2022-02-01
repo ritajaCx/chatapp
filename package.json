@@ -1,0 +1,27 @@
+{
+  "name": "chatapp_t1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "appt1.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node appt1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ritajaCx/chatapp.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ritajaCx/chatapp/issues"
+  },
+  "homepage": "https://github.com/ritajaCx/chatapp#readme",
+  "dependencies": {
+    "express": "^4.17.2",
+    "http": "^0.0.1-security",
+    "node-emoji": "^1.11.0",
+    "path": "^0.12.7",
+    "socket.io": "^4.4.1"
+  }
+}

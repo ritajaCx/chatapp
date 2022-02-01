@@ -1,0 +1,219 @@
+<html>
+
+    <head>
+        <title> Chat Application </title>
+        <script>
+            var name = prompt("Enter your Name to Join !");
+        </script>
+
+        <style>
+            *{
+                margin: 5px;
+                padding: 0px;
+            }
+
+            body{
+             
+                font-size: 20px;
+                font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+                /*background-color: rgb(218, 205, 197);*/
+                background-color: white;
+            }
+            body h2 {
+                color: rgb(138, 252, 9);
+                width: auto;
+                text-shadow: rgb(75, 136, 13) 2px 2px;
+                
+            }
+
+            #form{
+                background-color: white;
+                padding: 5px;
+                position: fixed;
+                bottom: 5px;
+                width: 100%;
+            }
+
+            #form input
+            {
+                width: 75%;
+                background-color: rgb(51, 51, 51);
+                padding: 10px;
+                color: white;
+                font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+            }
+
+            .Message
+            {
+                width: 5%;
+                background-image: 'send.png';
+                padding: 10px;
+                box-shadow: thistle;
+                color: black;
+                font-size: 12pt;
+                font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+            }
+            .Location
+            {
+                width: 7%;
+                background-color: #922525;
+                padding: 10px;
+                color: white;
+                font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;  
+            }
+            .Emoji
+            {
+                width: 4%;
+                background-color: #ffd13b;
+                padding: 10px;
+                color: black;
+                font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+            }
+            
+
+            #messages li
+            {
+                padding: 5px 10px;
+                width: 95%;
+                list-style-type: none;
+                
+            }
+
+            #sender
+            {
+                background-color: rgb(138, 252, 9);
+                font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+                color:black;
+                text-align: right;
+                
+            }
+            #sndLoc
+            {
+                background-color: #922525;  
+                color: white;
+                font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+                text-align: right;
+               
+                padding: 5px 10px; 
+            }
+            #sndEmoji
+            {
+                background-color: rgb(202, 241, 157);
+                font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+                color:black;
+                text-align: right;
+            }
+            #receiver
+            {                
+                text-align: left;
+                
+                color: black;
+                font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+                background-color: rgb(228, 224, 224);         
+            }
+            #rcvLoc
+            {                
+                background-color: #922525;  
+                color: white;
+                font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+                text-align: left;
+                max-width: 800px;  
+                padding: 5px 10px;            
+            }
+            #rcvEmoji
+            {                
+                background-color:  rgb(228, 224, 224);  
+                max-width: 800px;  
+                padding: 5px 10px;    
+                text-align: left; 
+                color: black;                
+            }
+          
+
+        </style>
+
+
+    </head>
+
+    <body>
+        <h2>Chat Room</h2>
+        <ul id="messages"></ul>
+
+        
+        <form id="form">
+            <input id="input">
+            <button class="Message" type="submit">Send</button>
+            <button class="Emoji" type="submit">Emoji</button>
+            <button class="Location" type="submit">Location</button>
+        
+        </form>
+
+    </body>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+    <script>
+        var socket = io();
+        socket.emit('joining message', name);
+
+        //sending the message
+        $('.Message').click(function (e){
+            e.preventDefault;
+            
+            var message = $('#input').val();          //reading the message type in input
+            
+            socket.emit("chat message", (name + " : " + message));         //sending it to the socket emit by appending the name to the message
+            
+            $('#messages').append($('<li id="sender">').text('You : ' + message));    //append the my own message to the ul as you tag
+            
+            $('#input').val("");     //making the input box empty
+            return false; 
+        })
+
+        //sending location
+        $('.Location').click(function (e){
+            e.preventDefault;
+          
+            var message = $('#input').val();
+    
+            socket.emit("chat location", (name + " 's Location " + message));
+          
+            
+            $('#messages').append($('<li id="sndLoc">').text('You shared Location: ' + message));
+          
+            $('#input').val("");
+            return false; 
+        })
+
+        //sending emoji
+        $('.Emoji').click(function (e){
+            e.preventDefault;
+      
+            var message = $('#input').val();
+       
+            socket.emit("chat emoji", (name + " shared Emoji : " + message));
+           
+            $('#messages').append($('<li id="sndEmoji">').text('You shared Emoji ' + message));
+         
+            $('#input').val("");
+            return false; 
+        })
+
+        //receiving text
+        socket.on('chat message', function(msg){
+            $('#messages').append($('<li id="receiver">').text(msg));
+        });
+        //receiving location
+        socket.on('chat location', function(msg){
+            $('#messages').append($('<li id="rcvLoc">').text(msg));
+        });
+        //receiving emoji
+        socket.on('chat emoji', function(msg){
+            $('#messages').append($('<li id="rcvEmoji">').text(msg));
+        });
+
+
+    </script>
+
+</html>
